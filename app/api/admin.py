@@ -55,7 +55,6 @@ def list_crew(db: Session = Depends(get_db)):
             "id": crew.id,
             "crew_id": crew.crew_id,
             "base_code": crew.base_code,
-            "display_name": getattr(crew, "display_name", None),
             "is_active": crew.is_active,
             "feed": {
                 "is_active": feed.is_active if feed else None,
@@ -100,9 +99,6 @@ def update_crew(crew_id: str, payload: UpdateCrewRequest, db: Session = Depends(
 
     if payload.is_active is not None:
         crew.is_active = payload.is_active
-    if payload.display_name is not None:
-        if hasattr(crew, "display_name"):
-            crew.display_name = payload.display_name
     crew.updated_at = datetime.utcnow()
     db.commit()
     return {"message": "Updated", "crew_id": crew_id}
